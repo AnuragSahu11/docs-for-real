@@ -3,6 +3,7 @@ const app = express();
 const port = 3002;
 
 import { UserSession } from "common";
+import { UserSessionType } from "common";
 
 app.get("/", (req: any, res: any) => {});
 app.post("/", (req: any, res: any) => {
