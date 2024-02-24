@@ -1,11 +1,15 @@
 import express from "express";
-const app = express();
-const port = 3002;
-
+import { createServer } from "http";
+import cors from "cors";
 import { UserSession } from "common";
 import { UserSessionType } from "common";
+import { Server } from "socket.io";
 
-app.get("/", (req: any, res: any) => {});
+const port = 3002;
+const app = express();
+
+app.use(cors());
+
 app.post("/", (req: any, res: any) => {
   let parsedUser = UserSession.safeParse(req.body);
   if (!parsedUser.success) {
@@ -13,6 +17,25 @@ app.post("/", (req: any, res: any) => {
   }
 });
 
-app.listen(port, () => {
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  cors: { origin: "*" },
+});
+
+let pageText = "";
+
+io.on("connection", (socket) => {
+  console.log("connected", socket.id);
+  socket.on("page-load", (pageName: string) =>
+    socket.emit("initial-page-data", pageText)
+  );
+  socket.on("page-data-change", (inputData) => {
+    pageText = inputData;
+    console.log(pageText, inputData);
+  });
+});
+
+httpServer.listen(port, () => {
   console.log("Running on port");
 });

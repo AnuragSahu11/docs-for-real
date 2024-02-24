@@ -2,19 +2,45 @@
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 
+const socket = io("http://localhost:3002");
+const pageName = "sexy-lady";
 const LoginPage = () => {
-  useEffect(() => {
-    console.log(process.env.NEXT_GOOGLE_CLIENT_ID);
-  }, []);
-
   const session = useSession();
 
   return (
     <>
+      <DemoPageComponent />
       <Button onClick={() => signIn()}>Sign In With Google</Button>
       <Button onClick={() => signOut()}>Log out</Button>
+    </>
+  );
+};
+
+const DemoPageComponent = () => {
+  const inputRef = useRef("");
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("CCCCCC");
+    });
+    socket.emit("page-load", pageName);
+    socket.on("initial-page-data", (textFieldData) => {
+      console.log(textFieldData);
+    });
+  }, []);
+  return (
+    <>
+      <TextField
+        onChange={(e) => {
+          console.log(e.target.value);
+          inputRef.current = e.target.value;
+        }}
+      />
+      <Button onClick={() => socket.emit("page-data-change", inputRef.current)}>
+        Submit
+      </Button>
     </>
   );
 };
