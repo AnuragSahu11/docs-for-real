@@ -10,7 +10,8 @@ import { authenticateJwt } from "./middlewares/authenticateJwt";
 const PORT = 3002;
 const app = express();
 
-app.use(cors());
+app.use(express.json());
+app.use(cors({ origin: "*" }));
 const httpServer = createServer(app);
 
 connectToMongoDB();

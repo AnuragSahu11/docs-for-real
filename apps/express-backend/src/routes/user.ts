@@ -4,6 +4,18 @@ const router = express.Router();
 import { Schema } from "mongoose";
 import { authenticateJwt } from "../middlewares/authenticateJwt";
 
+router.post("/sign-in", async (req, res) => {
+  const { useremail, username } = req.body;
+  try {
+    const newUser = await new Users({ useremail, username });
+    const newUserSaved = await newUser.save();
+    res.status(200).send({ message: "User created" });
+  } catch (err) {
+    res.status(400).send({
+      message: "New User not created",
+    });
+  }
+});
 router.get("/profile", async (req, res) => {
   const { useremail } = req.headers;
   try {
@@ -11,7 +23,7 @@ router.get("/profile", async (req, res) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(400).send({ message: "User Not Found" });
+      res.status(200).json(null);
     }
   } catch (err) {
     res.status(400).send({ message: "User Not Found" });

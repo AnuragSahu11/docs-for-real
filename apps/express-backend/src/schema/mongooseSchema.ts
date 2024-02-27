@@ -5,6 +5,8 @@ export const userSchema = new Schema({
   useremail: String,
 });
 
+userSchema.set("timestamps", true);
+
 export const pageSchema = new Schema({
   authorid: { type: Schema.Types.ObjectId, ref: "users" },
   pageName: String,
@@ -13,3 +15,5 @@ export const pageSchema = new Schema({
     { type: Schema.Types.ObjectId, ref: "pages", required: false },
   ],
 });
+
+pageSchema.set("timestamps", true);

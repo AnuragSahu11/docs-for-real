@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
@@ -9,6 +10,17 @@ const socket = io("http://localhost:3002");
 const pageName = "sexy-lady";
 const LoginPage = () => {
   const session = useSession();
+
+  useEffect(() => {
+    (async () => {
+      const user = await axios.get("http://localhost:3002/user/profile", {
+        headers: {
+          useremail: "a@gmail.com",
+        },
+      });
+      console.log("user", user);
+    })();
+  }, []);
 
   return (
     <>

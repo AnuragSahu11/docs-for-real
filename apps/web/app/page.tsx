@@ -15,13 +15,6 @@ export default async function Page(): Promise<JSX.Element> {
   return (
     <main className={styles.main}>
       <Navbar />
-      {session ? (
-        <>Logout</>
-      ) : (
-        <Button appName="web" className={styles.button}>
-          Click me!!!!!!!!
-        </Button>
-      )}
     </main>
   );
 }
